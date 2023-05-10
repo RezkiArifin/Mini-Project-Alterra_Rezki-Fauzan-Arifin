@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../database/app_database.dart';
+import '../models/todo_model.dart';
+
 class FormProvider with ChangeNotifier {
   DateTime? dateSelected;
   TimeOfDay? timeSelected;
@@ -34,5 +37,14 @@ class FormProvider with ChangeNotifier {
       //     DateFormat('dd/MM/yyyy hh:mm').format(dateResult!);
       notifyListeners();
     }
+  }
+
+  void addTodo(TodoModel todo) async {
+    final database =
+        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final todoDao = database.todoDao;
+
+    await todoDao.insertTodo(todo);
   }
 }

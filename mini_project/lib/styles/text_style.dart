@@ -7,6 +7,12 @@ TextStyle todoTitleStyle = GoogleFonts.poppins(
   color: Colors.white,
 );
 
+TextStyle archiveTitleStyle = GoogleFonts.poppins(
+  fontSize: 36,
+  fontWeight: FontWeight.w500,
+  color: Colors.white,
+);
+
 TextStyle leadingTimeTextStyle = GoogleFonts.poppins(
   fontSize: 40,
   color: Colors.amber,

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_project/widgets/texfield_costume.dart';
 import 'package:provider/provider.dart';
+import '../database/app_database.dart';
+import '../models/todo_model.dart';
 import '../provider/form_provider.dart';
 
 class FormWidget extends StatefulWidget {
-  // final Function(String, String, DateTime) addFunction;
   const FormWidget({
     super.key,
-    // required this.addFunction,
   });
 
   @override
@@ -80,9 +80,11 @@ class _FormWidgetState extends State<FormWidget> {
               backgroundColor: const Color(0xff2da9ef),
             ),
             onPressed: () {
-              // widget.addFunction(
-              //     titleController.text, subtitleController.text, dateResult!);
-              // Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              final todo = TodoModel(null, titleController.text,
+                  subtitleController.text, formProvider.dateResult!, false);
+
+              formProvider.addTodo(todo);
             },
             child: const Text(
               'add',

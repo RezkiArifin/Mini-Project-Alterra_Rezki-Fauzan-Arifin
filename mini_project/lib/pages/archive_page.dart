@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mini_project/database/todo_db.dart';
+import 'package:mini_project/styles/text_style.dart';
 import 'package:mini_project/widgets/card_widget.dart';
 
+import '../database/todo_db.dart';
 import '../models/todo_model.dart';
-import '../styles/text_style.dart';
-import '../widgets/form_widget.dart';
 import '../widgets/header_widget.dart';
-import 'archive_page.dart';
+import 'home_page.dart';
 
-class HomePage extends StatefulWidget {
+class ArchivePage extends StatefulWidget {
   final TodoModelDao dao;
-
-  const HomePage({super.key, required this.dao});
+  const ArchivePage({super.key, required this.dao});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ArchivePage> createState() => _ArchivePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ArchivePageState extends State<ArchivePage> {
   @override
   Widget build(BuildContext context) {
-    final now = DateFormat('dd/MMMM/yyyy').format(DateTime.now());
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -33,33 +28,13 @@ class _HomePageState extends State<HomePage> {
             Positioned(
               child: HeaderWidget(
                 columnCostume: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
                       height: 50,
                     ),
-                    Text(
-                      "Todo-List",
-                      style: todoTitleStyle,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    ListTile(
-                      leading: Text(
-                        now.split("/").first,
-                        style: leadingTimeTextStyle,
-                      ),
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Text(
-                          now.split('/')[1],
-                          style: titleTimeTextStyle,
-                        ),
-                      ),
-                      subtitle: Text(
-                        now.split('/').last,
-                        style: subtitleTimeTextStyle,
-                      ),
+                    Center(
+                      child: Text('Archives', style: archiveTitleStyle),
                     )
                   ],
                 ),
@@ -67,7 +42,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Positioned(
               top: size.height / 4.5,
-              left: 15,
+              left: 16,
               child: Container(
                 width: size.width - 32,
                 height: size.height / 1.4,
@@ -81,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: StreamBuilder<List<TodoModel>>(
-                    stream: widget.dao.findAllTodoAsStream(),
+                    stream: widget.dao.findAllTodoArchiveAsStream(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return Container();
 
@@ -100,62 +75,48 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xff2da9ef),
         shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
+        notchMargin: 8,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.list_alt_rounded),
-              color: Colors.white,
-              iconSize: 28,
-            ),
-            IconButton(
               onPressed: () {
-                Navigator.of(context).push(
+                Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (_) {
-                      return ArchivePage(
+                      return HomePage(
                         dao: widget.dao,
                       );
                     },
                   ),
+                  (route) => false,
                 );
               },
-              icon: const Icon(Icons.archive_rounded),
-              color: Colors.white,
-              iconSize: 28,
+              icon: const Icon(
+                Icons.list_alt_outlined,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.archive_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return FormWidget(
-                  //  addFunction: addTask,
-                  );
-            },
-          );
-        },
-        backgroundColor: const Color(0xff2da9ef),
-        foregroundColor: Colors.white,
-        child: const Icon(
-          Icons.add,
-          size: 36,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
